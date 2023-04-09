@@ -7,7 +7,7 @@ type SeoType = {
 export default function Seo({title}: SeoType) {
   return (
     <Head>
-      <title>{title} | Kylie-Tables</title>
+      <title>{title} | HungryTable</title>
     </Head>
   )
 }
