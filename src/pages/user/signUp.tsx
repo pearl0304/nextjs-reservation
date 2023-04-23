@@ -1,41 +1,15 @@
 import React, {useState} from "react";
+import {Box, Button, Grid, TextField, Paper} from "@mui/material";
 import {SignUpFormData} from "@/interfaces/user.interface";
-import Seo from "@/common/Seo";
-import Button from '@mui/material/Button';
-import {TextField, Grid, Box, InputAdornment, IconButton} from "@mui/material";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import {Alert} from "@mui/lab";
 
 
-function ReusableTextField(props: any) {
-  const {name, label, type, value, onChange, variant, checkDuplicate} = props;
-  return (
-    <Box sx={{mb: 2}}>
-      <TextField
-        onChange={onChange}
-        name={name}
-        type={type}
-        required
-        value={value}
-        fullWidth
-        label={label}
-        variant={variant}
-        InputProps={
-          checkDuplicate && {
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={checkDuplicate}>
-                  <CheckCircleOutlineIcon/>
-                </IconButton>
-              </InputAdornment>
-            ),
-          }
-        }
-      />
-    </Box>
-  );
-}
+/** TODO
+ * 1. input - email, displayName, password1, password2
+ * 2. check duplicated - email, displayName
+ * 3. check the password is matching
+ * 4. css - mui (Chat GPT)
+ * 5. database - firebase `users`
+ **/
 
 export default function SignUp() {
   const [formData, setFormData] = useState<SignUpFormData>({
@@ -45,101 +19,48 @@ export default function SignUp() {
     password2: ""
   })
 
-
-  const [isEmailDuplicated, setIsEmailDuplicated] = useState(false);
-  const [isDisplayNameDuplicated, setIsDisplayNameDuplicated] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
-    setFormData((preForm) => ({...preForm, [name]: value}))
+    setFormData((prevFields) => ({
+      ...prevFields,
+      [name]: value
+    }))
   }
 
-
-  const handleCheckEmailDuplicate = () => {
-    const result = false;
-    if (result) {
-      setIsEmailDuplicated(true);
-      setError('Duplicated Email');
-      return;
-    } else {
-      setIsEmailDuplicated(false);
-    }
-
-  };
-
-  const handleCheckDisplayNameDuplicate = () => {
-    const result = true;
-    if (result) {
-      setIsDisplayNameDuplicated(true);
-      setError('Duplicated DisplayName');
-      return;
-    } else {
-      setIsEmailDuplicated(false);
-    }
-
-  };
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (formData.password1 !== formData.password2) {
-      setError('Passwords do not match');
-      return;
-    }
-    setError("");
+
+    // TODO
+    // CHECK EMAIL DUPLICATE
+    // CHECK DISPLAY NAME DUPLICATE
+    // PASSWORD MATCH
   }
 
   return (
-    <>
-      <Seo title="Sign Up"/>
-      <Grid container justifyContent="center">
-        <Grid item xs={12} md={6}>
-          <form onSubmit={handleSubmit}>
-            {error && <Alert severity="error">{error}</Alert>}
-            <ReusableTextField
-              name="email"
-              type="email"
-              label="Email"
-              value={formData.email}
-              onChange={handleFormChange}
-              variant="outlined"
-              checkDuplicate={handleCheckEmailDuplicate}
-            />
-
-            <ReusableTextField
-              name="displayName"
-              type="text"
-              label="Display Name"
-              value={formData.displayName}
-              onChange={handleFormChange}
-              variant="outlined"
-              checkDuplicate={handleCheckDisplayNameDuplicate}
-            />
-
-            <ReusableTextField
-              name="password1"
-              type="password"
-              label="Password"
-              value={formData.password1}
-              onChange={handleFormChange}
-              variant="outlined"
-            />
-            <ReusableTextField
-              name="password2"
-              type="password"
-              label="Confirm Password"
-              value={formData.password2}
-              onChange={handleFormChange}
-              variant="outlined"
-            />
-
-            <Button type="submit" variant="contained" color="primary" fullWidth sx={{backgroundColor: 'primary.main'}}>
-              Sign Up
-            </Button>
-
-          </form>
-        </Grid>
+    <Grid container justifyContent="center">
+      <Grid item xs={12} sm={6} md={4}>
+        <Paper sx={{p: 2}}>
+          <Grid container direction="column" spacing={2}>
+            <Grid item>
+              <TextField label="email" fullWidth onChange={onChange} name="email" value={formData.email}/>
+            </Grid>
+            <Grid item>
+              <TextField label="displayName" fullWidth onChange={onChange} name="displayName" value={formData.email}/>
+            </Grid>
+            <Grid item>
+              <TextField label="password" type="password" fullWidth onChange={onChange} name="password1" value={formData.password1}/>
+            </Grid>
+            <Grid item>
+              <TextField label="confirm password" type="password" fullWidth onChange={onChange} name="password2" value={formData.password2} />
+            </Grid>
+            <Grid item>
+              <Button variant="contained" fullWidth type="submit">
+                Sign up
+              </Button>
+            </Grid>
+          </Grid>
+        </Paper>
       </Grid>
-    </>
+    </Grid>
   )
 }
